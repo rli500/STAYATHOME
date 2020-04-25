@@ -2,9 +2,9 @@ import pandas as pd
 data = pd.read_csv("socialdistancing/2020/01/01/2020-01-01-social-distancing.csv")
 main = pd.read_csv("fips/us-state-ansi-fips.csv")
 
-main['before_total'] = 0
-main['before_athome'] = 0
-main['before_percent'] = 0
+main['totalCount'] = 0
+main['atHome'] = 0
+main['percentAtHome'] = 0
 
 num = data.shape[0]
 for i in range(num):
@@ -13,8 +13,8 @@ for i in range(num):
 
     index = main.index[main['st'] == fipsID]
 
-    deviceCount = data['device_count'].iloc[i] + main.loc[index, 'before_total']
-    atHome = data['completely_home_device_count'].iloc[i] + main.loc[index, 'before_athome']
+    deviceCount = data['device_count'].iloc[i] + main.loc[index, 'totalCount']
+    atHome = data['completely_home_device_count'].iloc[i] + main.loc[index, 'atHome']
 
     main.loc[index, 'before_total'] = deviceCount
     main.loc[index, 'before_athome'] = atHome
