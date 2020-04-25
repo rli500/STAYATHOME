@@ -16,6 +16,6 @@ for i in range(num):
     deviceCount = data['device_count'].iloc[i] + main.loc[index, 'totalCount']
     atHome = data['completely_home_device_count'].iloc[i] + main.loc[index, 'atHome']
 
-    main.loc[index, 'before_total'] = deviceCount
-    main.loc[index, 'before_athome'] = atHome
-    main.loc[index, 'before_percent'] = (atHome/deviceCount)*100
+    main.loc[index, 'totalCount'] = deviceCount
+    main.loc[index, 'atHome'] = atHome
+    main.loc[index, 'percentAtHome'] = (atHome/deviceCount)*100
