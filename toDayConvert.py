@@ -1,4 +1,5 @@
 import pandas as pd
+
 data = pd.read_csv("socialdistancing/2020/01/01/2020-01-01-social-distancing.csv")
 main = pd.read_csv("fips/us-state-ansi-fips.csv")
 
