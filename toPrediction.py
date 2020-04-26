@@ -54,15 +54,12 @@ def iGrowth(t):  # Infected previously + newly infected - recovered + growth in 
 def rGrowth(t):  # Recovered
     return R[t] + numRecovery(t)
 
-
-for i in range(5):
+for i in range(mainDF.shape[0]):
     row = mainDF.iloc[i]
 
     stNameMod = row['State']
     stName = stNameMod[1:]  # Dataset has extra period
-    #stAbbrev = fips.loc[fips['stname'] == stName]['stusps'][i]
     stAbbrev = fips.loc[i]['stusps']
-    print(stName, stAbbrev)
     stdataPath = "States_data/" + stAbbrev + "_data.xlsx"
     stData = pd.read_excel(stdataPath)
 
@@ -91,10 +88,10 @@ for i in range(5):
                 covidDate = stData['seconds_since_Epoch'].iloc[j]
                 covidDate = datetime.fromtimestamp(covidDate).date()
                 if ourDate == covidDate:
-                    infectedNum = int(stData.iloc[j][2])
-                    if infectedNum != 0:
+                    infectedNum = stData.iloc[j][2]
+                    if not math.isnan(infectedNum) and int(infectedNum) != 0:
                         firstCase = True
-                        I[j] += infectedNum
+                        I[j] += int(infectedNum)
                         break
                 elif covidDate > ourDate:
                     timeIndex = x
@@ -102,9 +99,8 @@ for i in range(5):
 
         path = "data/data" + datePath + '.xlsx'
         data = pd.read_excel(path)
-        #percentAtHome = data[data['stname'] == stName]['percentAtHome'][0]
         percentAtHome = data.loc[j]['percentAtHome']
-        atHome = .1 * percentAtHome / 100 * S[j]
+        atHome = percentAtHome / 100 * S[j]
 
         S.append(sGrowth(j, S[j] - atHome))
         E.append(eGrowth(j, S[j] - atHome))
@@ -114,5 +110,8 @@ for i in range(5):
         label = "infected_day" + str(j)
         mainDF.at[i, label] = I[j]
 
-finalPath = "final/finalData.xlsx"
+    if i % 10 == 0:
+        print(str(i/50 * 100)+"% done")
+
+finalPath = "final/finalDataUnMod.xlsx"
 mainDF.to_excel(finalPath, sheet_name='main', index=False)
